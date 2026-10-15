@@ -128,45 +128,33 @@ const supabaseClient = window.supabase.createClient(
   <footer>© 2026 VORAX · Le monde se connecte ici.</footer>
 
   <script>
-    function publishPost() {
-      const author = document.getElementById('author').value.trim() || 'Membre VORAX';
-      const message = document.getElementById('message').value.trim();
-      if (!message) {
-        alert('Écris un message avant de publier.');
-        return;
-      }
-      const post = document.createElement('article');
-      post.className = 'card';
+   
+async function publishPost() {
+  const author =
+    document.getElementById('author').value.trim() ||
+    'Membre VORAX';
 
-      const head = document.createElement('div');
-      head.className = 'post-head';
-      const avatar = document.createElement('div');
-      avatar.className = 'avatar';
-      avatar.textContent = author.charAt(0).toUpperCase();
-      const details = document.createElement('div');
-      const name = document.createElement('strong');
-      name.textContent = author;
-      const time = document.createElement('div');
-      time.className = 'muted';
-      time.textContent = 'À l’instant';
-      details.append(name, time);
-      head.append(avatar, details);
+  const message =
+    document.getElementById('message').value.trim();
 
-      const text = document.createElement('p');
-      text.className = 'post-text';
-      text.textContent = message;
+  if (!message) {
+    alert('Écris un message avant de publier.');
+    return;
+  }
 
-      const actions = document.createElement('div');
-      actions.className = 'actions';
-      const like = document.createElement('button');
-      like.textContent = '♡ J’aime';
-      like.onclick = function() { likePost(like); };
-      actions.append(like);
-      post.append(head, text, actions);
+  const { error } = await supabaseClient
+    .from('posts')
+    .insert([{ author: author, content: message }]);
 
-      document.getElementById('feed').prepend(post);
-      document.getElementById('message').value = '';
-    }
+  if (error) {
+    alert('Erreur : ' + error.message);
+    return;
+  }
+
+  document.getElementById('message').value = '';
+  alert('Publication enregistrée dans Supabase !');
+}
+
 
     function likePost(button) {
       if (button.dataset.liked === 'yes') {
