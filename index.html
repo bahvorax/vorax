@@ -201,7 +201,49 @@ async function publishPost() {
         button.textContent = '♥ Aimé';
       }
     }
-  
+  async function loadPosts() {
+  const { data, error } = await supabaseClient
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Erreur de chargement :', error.message);
+    return;
+  }
+
+  const feed = document.getElementById('feed');
+
+  feed.querySelectorAll('.dynamic-post').forEach(post => post.remove());
+
+  data.forEach(item => {
+    const post = document.createElement('article');
+    post.className = 'card dynamic-post';
+
+    const head = document.createElement('div');
+    head.className = 'post-head';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = (item.author || 'M').charAt(0).toUpperCase();
+
+    const details = document.createElement('div');
+    const name = document.createElement('strong');
+    name.textContent = item.author || 'Membre VORAX';
+    details.appendChild(name);
+
+    head.append(avatar, details);
+
+    const text = document.createElement('p');
+    text.className = 'post-text';
+    text.textContent = item.content || '';
+
+    post.append(head, text);
+    feed.appendChild(post);
+  });
+}
+
+loadPosts();
   </script>
 </body>
 
