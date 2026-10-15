@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b16">
+  <title>VORAX — Le monde se connecte ici</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #090b16;
+      color: white;
+    }
+    header {
+      padding: 20px;
+      border-bottom: 1px solid #282b40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: #090b16;
+    }
+    .logo {
+      font-size: 30px;
+      font-weight: 900;
+      background: linear-gradient(90deg,#8b5cf6,#3b82f6,#ec4899);
+      color: transparent;
+      background-clip: text;
+    }
+    .tagline { color: #a5a8c3; font-size: 12px; }
+    main { max-width: 650px; margin: auto; padding: 18px; }
+    .welcome {
+      padding: 25px 0;
+    }
+    h1 { font-size: 27px; margin-bottom: 8px; }
+    .muted { color: #a5a8c3; line-height: 1.5; }
+    .card {
+      background: #14172a;
+      border: 1px solid #292d48;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    textarea, input {
+      width: 100%;
+      background: #0b0e1c;
+      color: white;
+      border: 1px solid #343853;
+      border-radius: 10px;
+      padding: 13px;
+      font: inherit;
+      margin: 8px 0;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+    button {
+      background: linear-gradient(90deg,#7655ed,#3979f6);
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      padding: 12px 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .post-head { display: flex; gap: 10px; align-items: center; }
+    .avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg,#8b5cf6,#ec4899);
+      font-weight: bold;
+    }
+    .post-text { line-height: 1.6; white-space: pre-wrap; }
+    .actions { display: flex; gap: 10px; margin-top: 14px; }
+    .actions button { background: #242844; }
+    footer { text-align: center; padding: 25px; color: #858aa8; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="logo">VORAX</div>
+      <div class="tagline">Le monde se connecte ici.</div>
+    </div>
+    <div>🌍</div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <h1>Le monde est à toi.</h1>
+      <p class="muted">Partage tes idées, raconte ton histoire et connecte-toi au monde entier.</p>
+    </section>
+
+    <section class="card">
+      <h3>✍️ Créer une publication</h3>
+      <input id="author" placeholder="Ton nom ou pseudo">
+      <textarea id="message" placeholder="Quoi de neuf ? Partage tes idées avec le monde..."></textarea>
+      <button onclick="publishPost()">Publier sur VORAX</button>
+      <p class="muted" style="font-size:12px">Première démo : les publications ne sont pas encore enregistrées sur un serveur.</p>
+    </section>
+
+    <section>
+      <h2>🌐 Le fil VORAX</h2>
+      <div id="feed">
+        <article class="card">
+          <div class="post-head">
+            <div class="avatar">V</div>
+            <div><strong>Équipe VORAX</strong><div class="muted">Bienvenue dans l'aventure</div></div>
+          </div>
+          <p class="post-text">Bienvenue sur VORAX ! Un nouvel espace pour partager, découvrir et se rapprocher. 🚀</p>
+          <div class="actions"><button onclick="likePost(this)">♡ J'aime</button></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2026 VORAX · Le monde se connecte ici.</footer>
+
+  <script>
+    function publishPost() {
+      const author = document.getElementById('author').value.trim() || 'Membre VORAX';
+      const message = document.getElementById('message').value.trim();
+      if (!message) {
+        alert('Écris un message avant de publier.');
+        return;
+      }
+      const post = document.createElement('article');
+      post.className = 'card';
+
+      const head = document.createElement('div');
+      head.className = 'post-head';
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.textContent = author.charAt(0).toUpperCase();
+      const details = document.createElement('div');
+      const name = document.createElement('strong');
+      name.textContent = author;
+      const time = document.createElement('div');
+      time.className = 'muted';
+      time.textContent = 'À l’instant';
+      details.append(name, time);
+      head.append(avatar, details);
+
+      const text = document.createElement('p');
+      text.className = 'post-text';
+      text.textContent = message;
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+      const like = document.createElement('button');
+      like.textContent = '♡ J’aime';
+      like.onclick = function() { likePost(like); };
+      actions.append(like);
+      post.append(head, text, actions);
+
+      document.getElementById('feed').prepend(post);
+      document.getElementById('message').value = '';
+    }
+
+    function likePost(button) {
+      if (button.dataset.liked === 'yes') {
+        button.dataset.liked = 'no';
+        button.textContent = '♡ J’aime';
+      } else {
+        button.dataset.liked = 'yes';
+        button.textContent = '♥ Aimé';
+      }
+    }
+  </script>
+</body>
+</html>
